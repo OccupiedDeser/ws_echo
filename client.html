@@ -1,0 +1,67 @@
+<!--
+ * @Author: Deser
+ * @e-Mail: yongk202@163.com
+ * @Date: 2020-07-21 Tue 13:08:30
+ * @LastEditors: Deser
+ * @LastEditTime: 2020-07-24 Fri 16:13:16
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebSocket_Echo</title>
+  </head>
+  <body>
+    <input type="text" placeholder="输入你的内容" />
+    <button id="button1">发送请求</button>
+    <button id="button2">断开连接</button>
+    <!-- 显示结果 -->
+    <div></div>
+
+    <script>
+      var input = document.querySelector("input");
+      var button1 = document.getElementById("button1");
+      var button2 = document.getElementById("button2");
+      var div = document.querySelector("div");
+
+      // var socket = new WebSocket('ws://echo.websocket.org/');
+      var socket = new WebSocket("ws://49.234.67.219:8888");
+      socket.addEventListener("open", function () {
+        div.innerHTML = "连接成功";
+      });
+
+      // 发送消息
+      button1.addEventListener("click", function () {
+        var value = input.value;
+        socket.send(value);
+      });
+
+      window.onload = function () {
+        document.onkeydown = function (ev) {
+          var event = ev || event;
+          if (event.keyCode == 13) {
+            var value = input.value;
+            socket.send(value);
+          }
+        };
+      };
+
+      // 主动断开
+      button2.addEventListener("click", function () {
+        socket.close();
+      });
+
+      // 接受数据
+      socket.addEventListener("message", function (e) {
+        // console.log(e);
+        div.innerHTML = e.data;
+      });
+
+      // 断开连接
+      socket.addEventListener("close", function () {
+        div.innerHTML = "服务器端开";
+      });
+    </script>
+  </body>
+</html>
